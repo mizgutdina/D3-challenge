@@ -83,12 +83,14 @@ function renderCircles(circlesGroup, circleLabels, newXScale, chosenXAxis) {
       .duration(1000)
       .attr("cx", d => newXScale(d[chosenXAxis]));
  
-    return circlesGroup;
+    
 
     circleLabels.transition()
     .duration(1000)
     .attr("x", d=>newXScale(d[chosenXAxis]));
-    return circleLabels;
+
+    return circlesGroup
+    //return circleLabels;
   }
  
   function renderYCircles(circlesGroup, circleLabels, newYScale, chosenYAxis, ) { // 
@@ -97,19 +99,19 @@ function renderCircles(circlesGroup, circleLabels, newXScale, chosenXAxis) {
       .duration(1000)
       .attr("cy", d => newYScale(d[chosenYAxis]));
  
-    return circlesGroup;
+    
 
     circleLabels.transition() //Does not work and pale WHY?
     .duration(1000)
     .attr("y", d=>newXScale(d[chosenYAxis]));
-    return circleLabels;
+    return circlesGroup;
   }
 
 
 
 
   // function used for updating circles group with new tooltip
-  function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, circleLabels) {
+  function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
  
     var label;
  
@@ -148,7 +150,7 @@ function renderCircles(circlesGroup, circleLabels, newXScale, chosenXAxis) {
       });
  
     circlesGroup.call(toolTip);
- 
+      console.log(circlesGroup)
     circlesGroup.on("mouseover", function(data) {
       toolTip.show(data, this);
     })
@@ -188,6 +190,7 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
       //WHAT TO DO ABOUT CORRELATION -0.385218228
         console.log(data.poverty)
         console.log(data.income)
+        console.log(data.obesity)
     });
  
     // xLinearScale function above csv import
@@ -287,7 +290,7 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
     
       .attr("y", 15 - margin.left) 
       .attr("x", 0 - (height / 2))
-      .attr("value", "obese")
+      .attr("value", "obesity")
       .classed("active", true)
       .text("Obese (%)");
     
@@ -324,7 +327,7 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
           // replaces chosenXAxis with value
           chosenXAxis = value;
  
-          // console.log(chosenXAxis)
+           
  
           // functions here found above csv import
           // updates x scale for new data
@@ -334,10 +337,10 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
           xAxis = renderAxes(xLinearScale, xAxis);
  
           // updates circles with new x values
-          circlesGroup = renderCircles(circlesGroup,circleLabels, xLinearScale, chosenXAxis);
- 
+         renderCircles(circlesGroup,circleLabels, xLinearScale, chosenXAxis);
+          console.log("circlesGroup :: ",circlesGroup)
           // updates tooltips with new info
-          circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+          circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
  
           // changes classes to change bold text
           if (chosenXAxis === "age") { //SECOND OPTION FOR X AXIS
@@ -391,18 +394,19 @@ labelsGroupY.selectAll("text")
     // functions here found above csv import
     // updates x scale for new data
     yLinearScale = yScale(data, chosenYAxis);
+    console.log(chosenYAxis)
 
     // updates x axis with transition
-    yAxis = renderAxes(yLinearScale, yAxis);
+    yAxis = renderYAxes(yLinearScale, yAxis); //yLinearScale
 
     // updates circles with new x values
-    circlesGroup = renderCircles(circlesGroup,circleLabels, yLinearScale, chosenYAxis);//
+    renderCircles(circlesGroup,circleLabels, yLinearScale, chosenYAxis);//
 
     // updates tooltips with new info
-    circlesGroup = updateToolTip(chosenYAxis, circlesGroup);
+     updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
     // changes classes to change bold text
-    if (chosenYAxis === "obese") { //SECOND OPTION FOR X AXIS
+    if (chosenYAxis === "obesity") { //SECOND OPTION FOR X AXIS
       obeseLabel
         .classed("active", true) //two inactive one active
         .classed("inactive", false);
