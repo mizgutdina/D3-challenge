@@ -103,7 +103,7 @@ function renderCircles(circlesGroup, circleLabels, newXScale, chosenXAxis) {
 
     circleLabels.transition() //Does not work and pale WHY?
     .duration(1000)
-    .attr("y", d=>newXScale(d[chosenYAxis]));
+    .attr("y", d=>newYScale(d[chosenYAxis]));
     return circlesGroup;
   }
 
@@ -400,7 +400,7 @@ labelsGroupY.selectAll("text")
     yAxis = renderYAxes(yLinearScale, yAxis); //yLinearScale
 
     // updates circles with new x values
-    renderCircles(circlesGroup,circleLabels, yLinearScale, chosenYAxis);//
+    renderYCircles(circlesGroup,circleLabels, yLinearScale, chosenYAxis);//
 
     // updates tooltips with new info
      updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
